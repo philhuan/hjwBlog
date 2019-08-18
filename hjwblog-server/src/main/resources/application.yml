@@ -1,0 +1,33 @@
+server:
+  port: 80
+spring:
+  application:
+    name: admin-managee
+  datasource:
+    url: jdbc:mysql://127.0.0.1:3306/hjwblog
+    username: root
+    password: root
+    driver-class-name: com.mysql.jdbc.Driver
+    type: com.alibaba.druid.pool.DruidDataSource
+    druid:
+          maxActive: 20
+          initialSize: 1
+          minIdle: 3
+          maxWait: 60000
+          timeBetweenEvictionRunsMillis: 60000
+          minEvictableIdleTimeMillis: 300000
+          validationQuery: SELECT 1
+          testWhileIdle: true
+          testOnBorrow: false
+          testOnReturn: false
+          filters: stat,wall,log4j
+          poolPreparedStatements: true
+          maxPoolPreparedStatementPerConnectionSize: 20
+
+
+
+logging:
+  level:
+    root: info
+logging.level.org.springframework.boot.autoconfigure: ERROR
+debug: true

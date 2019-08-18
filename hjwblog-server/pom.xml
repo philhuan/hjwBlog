@@ -1,0 +1,246 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<parent>
+		<groupId>com.hjwblog</groupId>
+		<artifactId>hjwBlog</artifactId>
+		<version>1.0-SNAPSHOT</version>
+	</parent>
+	<artifactId>hjwblog-server</artifactId>
+	<version>0.0.1-SNAPSHOT</version>
+	<name>hjwblog-server</name>
+	<description>server of hjwBlog</description>
+
+	<properties>
+		<java.version>1.8</java.version>
+	</properties>
+
+	<dependencies>
+        <!--<dependency>-->
+            <!--<groupId>javax.servlet</groupId>-->
+            <!--<artifactId>javax.servlet-api</artifactId>-->
+            <!--&lt;!&ndash;<version>3.1.0</version>&ndash;&gt;-->
+            <!--<scope>provided</scope>-->
+        <!--</dependency>-->
+
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-thymeleaf</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-web</artifactId>
+            <exclusions>
+                <!--<exclusion>-->
+                    <!--<groupId>org.springframework.boot</groupId>-->
+                    <!--<artifactId>spring-boot-starter-tomcat</artifactId>-->
+                <!--</exclusion>-->
+            </exclusions>
+
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-test</artifactId>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-jdbc</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-aop</artifactId>
+		</dependency>
+        <dependency>
+            <groupId>com.alibaba</groupId>
+            <artifactId>druid-spring-boot-starter</artifactId>
+            <version>1.1.13</version>
+        </dependency>
+
+
+
+
+
+
+		<!-- Springboot 热部署 -->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-devtools</artifactId>
+			<optional>true</optional>
+		</dependency>
+		<!-- Swagger API文档 -->
+		<dependency>
+			<groupId>io.springfox</groupId>
+			<artifactId>springfox-swagger-ui</artifactId>
+			<version>2.2.2</version>
+		</dependency>
+		<dependency>
+			<groupId>io.springfox</groupId>
+			<artifactId>springfox-swagger2</artifactId>
+			<version>2.2.2</version>
+		</dependency>
+		<!-- Mybatis -->
+		<dependency>
+			<groupId>org.mybatis.spring.boot</groupId>
+			<artifactId>mybatis-spring-boot-starter</artifactId>
+			<version>1.1.1</version>
+		</dependency>
+		<!-- druid阿里巴巴数据库连接池 -->
+		<dependency>
+			<groupId>com.alibaba</groupId>
+			<artifactId>druid</artifactId>
+			<version>1.1.9</version>
+		</dependency>
+		<!-- MySql数据库驱动 -->
+		<dependency>
+			<groupId> mysql</groupId>
+			<artifactId> mysql-connector-java</artifactId>
+			<version> 5.0.5</version>
+		</dependency>
+
+        <!-- https://mvnrepository.com/artifact/log4j/log4j -->
+        <dependency>
+            <groupId>log4j</groupId>
+            <artifactId>log4j</artifactId>
+            <version>1.2.17</version>
+        </dependency>
+
+
+
+
+    </dependencies>
+
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.springframework.boot</groupId>
+				<artifactId>spring-boot-maven-plugin</artifactId>
+				<version>${spring.boot.version}</version>
+				<!--解决打包后，执行java -jar 命令，找不到主清单属性-->
+				<executions>
+					<execution>
+						<phase>package</phase>
+						<goals>
+							<goal>repackage</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+			<!--clean插件-->
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-clean-plugin</artifactId>
+				<version>${maven.clean.version}</version>
+				<configuration>
+					<filesets>
+						<fileset>
+							<directory>src/main/resources/static</directory>
+						</fileset>
+						<fileset>
+							<directory>src/main/resources/templates</directory>
+						</fileset>
+					</filesets>
+				</configuration>
+			</plugin>
+			<!--资源插件，主要为了从前端项目里复制打包好的文件到springboot项目-->
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-resources-plugin</artifactId>
+				<version>${maven.resource.version}</version>
+				<executions>
+					<execution>
+						<id>copy static</id>
+						<phase>generate-resources</phase>
+						<goals>
+							<goal>copy-resources</goal>
+						</goals>
+						<configuration>
+							<outputDirectory>src/main/resources/static</outputDirectory>
+							<overwrite>true</overwrite>
+							<resources>
+								<resource>
+									<!--因为vue-cli打包的目录在项目的根目录，所以从这里复制-->
+									<directory>${project.parent.basedir}/hjwblog-ui/dist</directory>
+									<includes>
+										<include>css/</include>
+										<include>img/</include>
+										<include>js/</include>
+										<include>favicon.ico</include>
+									</includes>
+								</resource>
+							</resources>
+						</configuration>
+					</execution>
+					<execution>
+						<id>copy template</id>
+						<phase>generate-resources</phase>
+						<goals>
+							<goal>copy-resources</goal>
+						</goals>
+						<configuration>
+							<outputDirectory>src/main/resources/templates</outputDirectory>
+							<overwrite>true</overwrite>
+							<resources>
+								<resource>
+									<!--因为vue-cli打包的目录在项目的根目录，所以从这里复制-->
+									<directory>${project.parent.basedir}/hjwblog-ui/dist</directory>
+									<includes>
+										<include>index.html</include>
+									</includes>
+								</resource>
+							</resources>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+
+            <!-- mybatis 自动生成实体bean -->
+            <plugin>
+                <groupId>org.mybatis.generator</groupId>
+                <artifactId>mybatis-generator-maven-plugin</artifactId>
+                <version>1.3.5</version>
+                <dependencies>
+                    <!--数据库驱动 -->
+                    <dependency>
+                        <groupId> mysql</groupId>
+                        <artifactId> mysql-connector-java</artifactId>
+                        <version> 5.0.5</version>
+                    </dependency>
+                    <dependency>
+                        <groupId>org.mybatis</groupId>
+                        <artifactId>mybatis-spring</artifactId>
+                        <version>1.2.2</version>
+                    </dependency>
+
+                    <dependency>
+                        <groupId>org.mybatis</groupId>
+                        <artifactId>mybatis</artifactId>
+                        <version>3.2.4</version>
+                    </dependency>
+
+
+                </dependencies>
+                <executions>
+                    <execution>
+                        <id>Generate MyBatis Artifacts</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>generate</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <!--允许移动生成的文件 -->
+                    <verbose>true</verbose>
+                    <!-- 是否覆盖 -->
+                    <overwrite>true</overwrite>
+                    <!-- 自动生成的配置 -->
+                    <configurationFile>
+                        src/main/resources/mybatis-generator.xml</configurationFile>
+                </configuration>
+            </plugin>
+		</plugins>
+	</build>
+
+</project>
